@@ -1,0 +1,24 @@
+/*
+a function that returns the sum of two numbers
+a function that takes an array of strings, and
+returns a string that is all those strings concatenated
+together
+a function that takes an array of integers, and returns
+a new array with every other element
+*/
+
+(1)
+START
+
+GET number1
+GET number2
+
+SET output = number1 + number2
+PRINT output
+
+(2)
+START
+
+(3)
+WHILE iterator < array.length
+  PRINT array[iterator]
