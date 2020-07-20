@@ -1,6 +1,23 @@
 const readline = require('readline-sync');
 const MESSAGES = require('./calculator_messages.json');
 
+// functions
+function prompt(message) {
+  console.log(`=> ${message}`);
+}
+
+function invalidNumber(number) {
+  return Number.isNaN(Number(number)) || number.trimStart() === '';
+}
+
+function invalidOp(number) {
+  if (number > 0 && number < 5) {
+    return false;
+  }
+  return true;
+}
+
+// main
 let run = true;
 let num1, num2, operation, output, response;
 
@@ -52,25 +69,3 @@ while (run) {
 
   response === 'y' ? prompt('Ok.'): run = false;
 }
-
-function prompt(message) {
-  console.log(`=> ${message}`);
-}
-
-function invalidNumber(number) {
-  return Number.isNaN(Number(number)) || number.trimStart() === '';
-}
-
-function invalidOp(number) {
-  if (number > 0 && number < 5) {
-    return false;
-  }
-  return true;
-}
-
-/*
-while (!['1', '2', '3', '4'].includes(operation)) {
-  prompt('Must choose 1, 2, 3 or 4');
-  operation = readline.question();
-}
-*/
