@@ -21,8 +21,9 @@ function invalidNumber(number) {
 
 // Main
 
-// Declare variables
-let apr, lengthYears, monthlyRate, lengthMonths, monthlyPayment;
+// Declare variables - eslint threw
+let loanAmount, apr, lengthYears, monthlyRate, lengthMonths, monthlyPayment,
+  runAnother;
 
 // Main Program Loop
 while (true) {
@@ -30,27 +31,27 @@ while (true) {
   // Get loan amount
   prompt('Input your loan amount (digits, no special characters)');
   loanAmount = Number(readline.question());
-    // Validation
-    while (invalidNumber(loanAmount)) {
-      prompt('Invalid input. Please input numbers only');
-      loanAmount = Number(readline.question());
-    }
+  // Validation
+  while (invalidNumber(loanAmount)) {
+    prompt('Invalid input. Please input numbers only');
+    loanAmount = Number(readline.question());
+  }
   // Get APR
   prompt('Input APR (if the interest rate is 5%, input 5)');
   apr = Number(readline.question()) / 100;
-    // Validation
-    while (invalidNumber(apr)) {
-      prompt('Invalid input. Please input numbers only');
-      apr = Number(readline.question());
-    }
+  // Validation
+  while (invalidNumber(apr)) {
+    prompt('Invalid input. Please input numbers only');
+    apr = Number(readline.question());
+  }
   // Get loan duration
   prompt('Input loan duration (in years)');
   lengthYears = Number(readline.question());
-    // Validation
-    while (invalidNumber(lengthYears)) {
-      prompt('Invalid input. Please input numbers only');
-      lengthYears = Number(readline.question());
-    }
+  // Validation
+  while (invalidNumber(lengthYears)) {
+    prompt('Invalid input. Please input numbers only');
+    lengthYears = Number(readline.question());
+  }
 
   // Processing variables for use in equation
   monthlyRate = apr / 12;
