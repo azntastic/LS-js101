@@ -1,0 +1,8 @@
+{
+  "invalidInput": "Invalid input. Please input positive numbers only",
+  "getLoanAmount": "Input your loan amount (digits, no special characters)",
+  "getAPR": "Input APR (if the interest rate is 5%, input 5)",
+  "getDuration": "Input loan duration. If the duration is 3 years and 2 months, input 3.2",
+  "anotherCalc": "Would you like to run another calculation? (y/n)",
+  "invalidYorN": "invalid input. Please input either y or n"
+}
