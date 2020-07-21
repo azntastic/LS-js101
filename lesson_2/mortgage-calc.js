@@ -21,7 +21,11 @@ function invalidNumber(number) {
 
 // Main
 
-// Declare variables - eslint threw
+/*
+Is it better to declare these variables inside the main while function?
+I declared them out here for readability, but I suppose declaring inside
+the function would avoid an potential scoping concerns?
+*/
 let loanAmount, apr, lengthYears, monthlyRate, lengthMonths, monthlyPayment,
   runAnother;
 
