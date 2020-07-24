@@ -5,19 +5,21 @@ const VALID_CHOICES = {
   scissors: ['scissors', 'sc'],
   lizard: ['lizard', 'l'],
   spock: ['spock', 'sp']
-}
+};
 const WINNING_CONDITIONS = {
   rock:     ['scissors', 'lizard'],
   paper:    ['rock',     'spock'],
   scissors: ['paper',    'lizard'],
   lizard:   ['paper',    'spock'],
   spock:    ['rock',     'scissors']
-}
+};
 
 let scores = {
   player: 0,
   computer: 0
-}
+};
+
+let winner;
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -35,7 +37,7 @@ function convertChoice(choice) {
   return Object.keys(VALID_CHOICES).find(key => VALID_CHOICES[key].includes(choice));
 }
 
-function getPlayerChoice(){
+function getPlayerChoice() {
   prompt(`Choose one: ${Object.keys(VALID_CHOICES).join(', ')}`);
   let choice = readline.question().toLowerCase();
 
@@ -48,26 +50,26 @@ function getPlayerChoice(){
   return convertChoice(choice);
 }
 
-function getComputerChoice(){
-    let randomIndex = Math.floor(Math.random() * Object.keys(VALID_CHOICES).length);
-    return Object.keys(VALID_CHOICES)[randomIndex];
+function getComputerChoice() {
+  let randomIndex = Math.floor(Math.random() * Object.keys(VALID_CHOICES).length);
+  return Object.keys(VALID_CHOICES)[randomIndex];
 }
 
 function displayChoices(playerChoice, computerChoice) {
   prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
 }
 
-function checkWinner(playerChoice, computerChoice){
+function checkWinner(playerChoice, computerChoice) {
   if (playerWins(playerChoice, computerChoice)) {
     winner = 'player';
   } else if (computerWins(playerChoice, computerChoice)) {
-    winner = 'computer'
+    winner = 'computer';
   } else {
     winner = null;
-  };
+  }
 }
 
-function displayWinner(){
+function displayWinner() {
   if (winner) {
     prompt(`${winner} wins`);
   } else {
@@ -75,15 +77,15 @@ function displayWinner(){
   }
 }
 
-function updateScores(){
+function updateScores() {
   if (winner) {
     scores[winner]++;
   }
   console.log(scores);
 }
 
-function checkGrandWinner(){
-  if (scores.player === 5 || scores.computer === 5){
+function checkGrandWinner() {
+  if (scores.player === 5 || scores.computer === 5) {
     return true;
   }
 }
@@ -97,7 +99,7 @@ function checkGrandWinner(){
 while (true) {
 
   let grandWinner;
-  let winner;
+  // let winner;
 
   let playerChoice = getPlayerChoice();
   let computerChoice = getComputerChoice();
@@ -107,16 +109,16 @@ while (true) {
   displayWinner();
   updateScores();
   if (checkGrandWinner()) {
-    if (scores.player === 5){
+    if (scores.player === 5) {
       grandWinner = 'player';
     } else {
       grandWinner = 'computer';
     }
-  };
+  }
 
-  if (grandWinner){
+  if (grandWinner) {
     prompt(`The Grand Winner is: ${grandWinner}`);
-    prompt('Another game?')
+    prompt('Another game?');
     let runAnother = readline.question().toLowerCase();
 
     while (runAnother !== 'y' && runAnother !== 'n') {
