@@ -1,10 +1,10 @@
 const readline = require('readline-sync');
 const VALID_CHOICES = {
-  rock: ['rock', 'r'],
-  paper: ['paper', 'p'],
+  rock:     ['rock', 'r'],
+  paper:    ['paper', 'p'],
   scissors: ['scissors', 'sc'],
-  lizard: ['lizard', 'l'],
-  spock: ['spock', 'sp']
+  lizard:   ['lizard', 'l'],
+  spock:    ['spock', 'sp']
 };
 const WINNING_CONDITIONS = {
   rock:     ['scissors', 'lizard'],
@@ -20,6 +20,8 @@ let scores = {
 };
 
 let winner;
+let grandWinner;
+
 
 function prompt(message) {
   console.log(`=> ${message}`);
@@ -90,16 +92,39 @@ function checkGrandWinner() {
   }
 }
 
-// prompt('Welcome to Rock Paper Scissors Lizard Spock');
-// prompt('When prompted, please enter your choice. You can also enter the first letter of your choice')
-// prompt('In the case of scissor/ spock, please enter the first two letters')
-// prompt('ie - "sc" for scissors, "sp" for spock');
-// prompt('First to 5 => Winner');
+function updateGrandWinner() {
+  if (checkGrandWinner()) {
+    if (scores.player === 5) {
+      grandWinner = 'player';
+    } else {
+      grandWinner = 'computer';
+    }
+  }
+}
+
+function resetScores() {
+  grandWinner = null;
+  scores.player = 0;
+  scores.computer = 0;
+}
+
+function displayGrandWinner(){
+  prompt(`The Grand Winner is: ${grandWinner}`);
+}
+
+function getPlayAnother(){
+  prompt('Another game?');
+  let runAnother = readline.question().toLowerCase();
+
+  while (runAnother !== 'y' && runAnother !== 'n') {
+    prompt('y or n');
+    runAnother = readline.question().toLowerCase();
+  }
+
+  if (runAnother[0] === 'y') return true;
+}
 
 while (true) {
-
-  let grandWinner;
-  // let winner;
 
   let playerChoice = getPlayerChoice();
   let computerChoice = getComputerChoice();
@@ -108,32 +133,24 @@ while (true) {
   checkWinner(playerChoice, computerChoice);
   displayWinner();
   updateScores();
-  if (checkGrandWinner()) {
-    if (scores.player === 5) {
-      grandWinner = 'player';
-    } else {
-      grandWinner = 'computer';
-    }
-  }
+  updateGrandWinner();
 
   if (grandWinner) {
-    prompt(`The Grand Winner is: ${grandWinner}`);
-    prompt('Another game?');
-    let runAnother = readline.question().toLowerCase();
-
-    while (runAnother !== 'y' && runAnother !== 'n') {
-      prompt('y or n');
-      runAnother = readline.question().toLowerCase();
-    }
-
-    if (runAnother[0] === 'n') {
+    displayGrandWinner();
+    if (!getPlayAnother()) {
       break;
     } else {
-      scores.player = 0;
-      scores.computer = 0;
+      resetScores();
     }
   }
 }
+
+// prompt('Welcome to Rock Paper Scissors Lizard Spock');
+// prompt('When prompted, please enter your choice. You can also enter the first letter of your choice')
+// prompt('In the case of scissor/ spock, please enter the first two letters')
+// prompt('ie - "sc" for scissors, "sp" for spock');
+// prompt('First to 5 => Winner');
+
 
 // let validArr = [].concat.apply([],Object.values(VALID_CHOICES));
 
