@@ -95,7 +95,7 @@ function updateScores() {
   if (winner) scores[winner]++;
 }
 
-function displayScores(){
+function displayScores() {
   console.log(`=> ${MESSAGES["displayScores"]}`, scores.player, scores.computer);
 }
 
@@ -121,15 +121,15 @@ function resetScores() {
   scores.computer = 0;
 }
 
-function displayGrandWinner(){
+function displayGrandWinner() {
   console.log(`=> ${MESSAGES["displayGrandWinner"]}`, grandWinner);
 }
 
-function checkPlayAnother(runAnother){
+function checkPlayAnother(runAnother) {
   if (runAnother === 'y' || runAnother === 'n') return true;
 }
 
-function getPlayAnother(){
+function getPlayAnother() {
   prompt(MESSAGES["anotherGame"]);
   let runAnother = readline.question().toLowerCase();
 
@@ -141,7 +141,7 @@ function getPlayAnother(){
   if (runAnother[0] === 'y') return true;
 }
 
-displayInstructions()
+displayInstructions();
 while (true) {
 
   let playerChoice = getPlayerChoice();
