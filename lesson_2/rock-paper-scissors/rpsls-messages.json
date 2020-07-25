@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome to Rock Paper Scissors Lizard Spock",
+  "instructions": "Instructions:\nWhen prompted, please enter your choice. \nYou can also enter the first letter (ie - 'r' for rock). \nIn the case of scissor/ spock, please enter the first two letters (ie - 'sc' for scissors, 'sp' for spock)\nFirst to 5 wins.",
+  "displayChoices": "=> Choose one: %s",
+  "invalidChoice": "That's not a valid choice, please choose again:",
+  "displaySelections": "You chose %s, computer chose %s",
+  "displayWinner": "%s wins",
+  "displayTie": "It's a tie",
+  "displayScores": "Current Scores: Player %s, Computer %s\n",
+  "displayGrandWinner": "The Grand Winner is: %s",
+  "anotherGame": "Want to play another game? (y/n)",
+  "yesOrNo": "y or n"
+}

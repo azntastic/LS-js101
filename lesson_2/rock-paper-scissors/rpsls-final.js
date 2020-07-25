@@ -1,4 +1,6 @@
 const readline = require('readline-sync');
+const MESSAGES = require('./rpsls-messages.json');
+
 const VALID_CHOICES = {
   rock:     ['rock', 'r'],
   paper:    ['paper', 'p'],
@@ -27,6 +29,10 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function displayInstructions() {
+  prompt(MESSAGES['instructions']);
+}
+
 function playerWins(choice, computerChoice) {
   return WINNING_CONDITIONS[choice].includes(computerChoice);
 }
@@ -35,21 +41,27 @@ function computerWins(choice, computerChoice) {
   return WINNING_CONDITIONS[computerChoice].includes(choice);
 }
 
-function convertChoice(choice) {
+function findValidChoice(choice) {
   return Object.keys(VALID_CHOICES).find(key => VALID_CHOICES[key].includes(choice));
 }
 
+function checkChoice(choice) {
+  let validArr = Object.values(VALID_CHOICES).flat();
+  if (validArr.includes(choice)) {
+    return true;
+  }
+}
+
 function getPlayerChoice() {
-  prompt(`Choose one: ${Object.keys(VALID_CHOICES).join(', ')}`);
+  console.log(`${MESSAGES["displayChoices"]}`, Object.keys(VALID_CHOICES).join(', '));
   let choice = readline.question().toLowerCase();
 
-  let validArr = Object.values(VALID_CHOICES).flat();
-  while (!validArr.includes(choice)) {
-    prompt("That's not a valid choice");
+  while (!checkChoice(choice)) {
+    prompt(MESSAGES["invalidChoice"]);
     choice = readline.question().toLowerCase();
   }
 
-  return convertChoice(choice);
+  return findValidChoice(choice);
 }
 
 function getComputerChoice() {
@@ -58,7 +70,7 @@ function getComputerChoice() {
 }
 
 function displayChoices(playerChoice, computerChoice) {
-  prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
+  console.log(`=> ${MESSAGES["displaySelections"]}`, playerChoice, computerChoice);
 }
 
 function checkWinner(playerChoice, computerChoice) {
@@ -73,17 +85,18 @@ function checkWinner(playerChoice, computerChoice) {
 
 function displayWinner() {
   if (winner) {
-    prompt(`${winner} wins`);
+    console.log(`=> ${MESSAGES["displayWinner"]}`, winner);
   } else {
-    prompt("It's a tie");
+    prompt(MESSAGES["displayTie"]);
   }
 }
 
 function updateScores() {
-  if (winner) {
-    scores[winner]++;
-  }
-  console.log(scores);
+  if (winner) scores[winner]++;
+}
+
+function displayScores(){
+  console.log(`=> ${MESSAGES["displayScores"]}`, scores.player, scores.computer);
 }
 
 function checkGrandWinner() {
@@ -109,21 +122,26 @@ function resetScores() {
 }
 
 function displayGrandWinner(){
-  prompt(`The Grand Winner is: ${grandWinner}`);
+  console.log(`=> ${MESSAGES["displayGrandWinner"]}`, grandWinner);
+}
+
+function checkPlayAnother(runAnother){
+  if (runAnother === 'y' || runAnother === 'n') return true;
 }
 
 function getPlayAnother(){
-  prompt('Another game?');
+  prompt(MESSAGES["anotherGame"]);
   let runAnother = readline.question().toLowerCase();
 
-  while (runAnother !== 'y' && runAnother !== 'n') {
-    prompt('y or n');
+  while (!checkPlayAnother(runAnother)) {
+    prompt(MESSAGES["yesOrNo"]);
     runAnother = readline.question().toLowerCase();
   }
 
   if (runAnother[0] === 'y') return true;
 }
 
+displayInstructions()
 while (true) {
 
   let playerChoice = getPlayerChoice();
@@ -133,6 +151,7 @@ while (true) {
   checkWinner(playerChoice, computerChoice);
   displayWinner();
   updateScores();
+  displayScores();
   updateGrandWinner();
 
   if (grandWinner) {
@@ -141,42 +160,7 @@ while (true) {
       break;
     } else {
       resetScores();
+      console.clear();
     }
   }
 }
-
-// prompt('Welcome to Rock Paper Scissors Lizard Spock');
-// prompt('When prompted, please enter your choice. You can also enter the first letter of your choice')
-// prompt('In the case of scissor/ spock, please enter the first two letters')
-// prompt('ie - "sc" for scissors, "sp" for spock');
-// prompt('First to 5 => Winner');
-
-
-// let validArr = [].concat.apply([],Object.values(VALID_CHOICES));
-
-// function displayWinner(choice, computerChoice) {
-//   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
-//
-//   if ((choice === 'rock' && computerChoice === 'scissors') ||
-//       (choice === 'paper' && computerChoice === 'rock') ||
-//       (choice === 'scissors' && computerChoice === 'paper') ||
-//
-//     ) {
-//     prompt('You win!');
-//   } else if ((choice === 'rock' && computerChoice === 'paper') ||
-//              (choice === 'paper' && computerChoice === 'scissors') ||
-//              (choice === 'scissors' && computerChoice === 'rock')) {
-//     prompt('Computer wins!');
-//   } else {
-//     prompt("It's a tie!");
-//   }
-// }
-
-// prompt('Do you want to play again (y/n)?');
-// let answer = readline.question().toLowerCase();
-// while (answer[0] !== 'n' && answer[0] !== 'y') {
-//   prompt('Please enter "y" or "n".');
-//   answer = readline.question().toLowerCase();
-// }
-//
-// if (answer[0] !== 'y') break;
