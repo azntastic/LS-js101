@@ -29,3 +29,20 @@ console.log(joinOr([1, 3, 5, 7, 9, 11]));
 console.log(joinOr([1, 3, 5, 7, 9, 11], ';'));
 console.log(joinOr([1, 3, 5, 7, 9, 11], '*', 'and'));
 console.log(joinOr([1, 3], ';'));
+
+// Their solution
+/*
+function joinOr(arr, delimiter = ', ', word = 'or') {
+  switch (arr.length) {
+    case 0:
+      return '';
+    case 1:
+      return `${arr[0]}`;
+    case 2:
+      return arr.join(` ${word} `);
+    default:
+      return arr.slice(0, arr.length - 1).join(delimiter) +
+             `${delimiter}${word} ${arr[arr.length - 1]}`;
+  }
+}
+*/

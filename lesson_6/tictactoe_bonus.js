@@ -26,22 +26,11 @@ function joinOr(array, delimiter = ',', word = 'or') {
 }
 
 
-function displayBoard(previousResult, scores, board){
+function displayBoard(board){
   console.clear();
 
   console.log(`You are ${HUMAN_MARKER}. Computer is ${COMPUTER_MARKER}`);
 
-  if (previousResult) {
-    switch(previousResult) {
-      case 'tie':
-        prompt('It was a tie');
-        break;
-      default:
-        prompt(`${previousResult} won`);
-    }
-  }
-
-  console.log(`Score: Player ${scores.player}, Computer ${scores.computer}`);
   console.log('');
   console.log('     |     |');
   console.log(`  ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
@@ -124,54 +113,62 @@ function detectWinner(board) {
   return null;
 }
 
-function playRound(previousResult, scores, board) {
-  while(true){ //Round
-    displayBoard(previousResult, scores, board); //extract this logic?
+function playAnother() {
+  prompt('Play again? (y or n)');
+  let answer = readline.question().toLowerCase()[0];
+  if (answer !== 'y'){
+    return true;
+  }
+}
+
+// let scores = {
+//   player : 0,
+//   computer : 0
+// };
+
+while(true) {
+  let board = initializeBoard();
+
+  while(true){
+    displayBoard(board);
     playerChoosesSquare(board);
     if ( boardFull(board) || hasWinner(board)) break;
     computerChoosesSquare(board);
     if ( boardFull(board) || hasWinner(board)) break;
   }
-}
 
-function displayRoundWinner(previousResult, board) {
+  displayBoard(board);
+
   if (hasWinner(board)) {
-    previousResult = detectWinner(board);
-    return previousResult;
+    prompt(`${detectWinner(board)} won!`);
+    // scores[detectWinner(board)] += 1;
   } else {
-    previousResult = 'tie';
-    return previousResult;
+    prompt("It's a tie");
   }
-}
 
-function playAgain() {
+  // console.log(scores);
+
+  // if (scores.computer === GAMES_TO_WIN || scores.player === GAMES_TO_WIN){
+  //   if (scores.player === 5) {
+  //     console.log('player grand winner');
+  //     break;
+  //   } else {
+  //     console.log('computer grand winner');
+  //     break;
+  //   }
+  // }
+
   prompt('Play again? (y or n)');
   let answer = readline.question().toLowerCase()[0];
-  if (answer === 'y') return true;
-}
-
-function adjustScores(scores, board) {
-  scores[detectWinner(board)] ++;
-}
-
-while(true) { //Game
-  let board = initializeBoard();
-  let scores = {
-    player: 0,
-    computer: 0
-  };
-  let previousResult = null;
-
-  while(true){ //Set
-    playRound(previousResult, scores, board);
-    adjustScores(scores, board);
-    previousResult = displayRoundWinner(previousResult, board);
-    displayBoard(previousResult, scores, board);
-    if (scores.computer === GAMES_TO_WIN || scores.player === GAMES_TO_WIN) break;
-    board = initializeBoard();
-  }
-
-  if (!playAgain()) break;
+  if (answer !== 'y') break;
 }
 
 prompt('Thanks for playing Tic Tac Toe!');
+
+/*
+  initializeBoard
+  playRound
+  checkWinner
+  displayWinner
+  checkGrandWinner
+*/
