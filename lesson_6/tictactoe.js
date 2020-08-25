@@ -3,6 +3,11 @@ const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
 const GAMES_TO_WIN = 2;
+const WINNINGLINES = [
+  [1, 2, 3], [4, 5, 6], [7, 8, 9], //rows
+  [1, 4, 7], [2, 5, 8], [3, 6, 9], //columns
+  [1, 5, 9], [3, 5, 7] //diagonals
+];
 
 function prompt(string) {
   console.log(`=> ${string}`);
@@ -84,9 +89,29 @@ function playerChoosesSquare(board){
 }
 
 function computerChoosesSquare(board){
-  let square;
-  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
-  board[emptySquares(board)[randomIndex]] = COMPUTER_MARKER;
+
+  let atRiskSquare = null;
+
+  for (let line = 0; line < WINNINGLINES.length; line ++){
+    let toCheck = WINNINGLINES[line];
+
+    if (toCheck.filter(square => board[square] === 'X').length === 2){
+
+       if (toCheck.filter(square => board[square] === 'O').length === 1){
+         continue;
+       } else {
+         atRiskSquare = toCheck.filter(square => board[square] === ' ')[0];
+         break;
+       }
+    }
+  }
+
+  if (atRiskSquare) {
+    board[atRiskSquare] = COMPUTER_MARKER;
+  } else {
+    let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+    board[emptySquares(board)[randomIndex]] = COMPUTER_MARKER;
+  }
 }
 
 function boardFull(board) {
@@ -98,14 +123,14 @@ function hasWinner(board) {
 }
 
 function detectWinner(board) {
-  let winningLines = [
-    [1, 2, 3], [4, 5, 6], [7, 8, 9], //rows
-    [1, 4, 7], [2, 5, 8], [3, 6, 9], //columns
-    [1, 5, 9], [3, 5, 7] //diagonals
-  ];
+  // let winningLines = [
+  //   [1, 2, 3], [4, 5, 6], [7, 8, 9], //rows
+  //   [1, 4, 7], [2, 5, 8], [3, 6, 9], //columns
+  //   [1, 5, 9], [3, 5, 7] //diagonals
+  // ];
 
-  for (let line = 0; line < winningLines.length; line++){
-    let [sq1, sq2, sq3] = winningLines[line];
+  for (let line = 0; line < WINNINGLINES.length; line++){
+    let [sq1, sq2, sq3] = WINNINGLINES[line];
 
     if (board[sq1] === HUMAN_MARKER &&
         board[sq2] === HUMAN_MARKER &&
@@ -125,7 +150,7 @@ function detectWinner(board) {
 }
 
 function playRound(previousResult, scores, board) {
-  while(true){ //Round
+  while(true){ //Round consisting of moves
     displayBoard(previousResult, scores, board); //extract this logic?
     playerChoosesSquare(board);
     if ( boardFull(board) || hasWinner(board)) break;
