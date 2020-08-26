@@ -18,6 +18,46 @@ function checkOpp(mode, board) {
        }
     }
   }
-  
+
   return oppSquare;
+}
+
+function printRoundWinner(previousResult){
+  if (previousResult) {
+    switch(previousResult) {
+      case 'tie':
+        prompt('It was a tie');
+        break;
+      default:
+        prompt(`${previousResult} won`);
+    }
+  }
+}
+
+function chooseSquare(currentPlayer, board){
+  if (currentPlayer === 'player'){
+    playerChoosesSquare(board);
+  } else {
+    computerChoosesSquare(board);
+  }
+}
+
+function alternatePlayer(currentPlayer){
+  if (currentPlayer === 'player'){
+    return 'computer';
+  } else {
+    return 'player';
+  }
+}
+
+function playRound(playerOne, previousResult, scores, board) {
+  let currentPlayer = playerOne;
+  displayBoard(scores, board);
+
+  while(true){
+    chooseSquare(currentPlayer, board);
+    displayBoard(scores, board);
+    if ( boardFull(board) || hasWinner(board)) break;
+    currentPlayer = alternatePlayer(currentPlayer);
+  }
 }
