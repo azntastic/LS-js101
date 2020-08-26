@@ -8,6 +8,7 @@ const WINNINGLINES = [
   [1, 4, 7], [2, 5, 8], [3, 6, 9], //columns
   [1, 5, 9], [3, 5, 7] //diagonals
 ];
+const FIRST_MOVE = 'choose';
 
 function prompt(string) {
   console.log(`=> ${string}`);
@@ -89,20 +90,17 @@ function playerChoosesSquare(board){
 }
 
 function computerChoosesSquare(board){
-
   let atRiskSquare = null;
 
-  for (let line = 0; line < WINNINGLINES.length; line ++){
-    let toCheck = WINNINGLINES[line];
+  atRiskSquare = checkOpp('attack', board);
 
-    if (toCheck.filter(square => board[square] === 'X').length === 2){
+  if(!atRiskSquare){
+    atRiskSquare = checkOpp('defence', board);
+  }
 
-       if (toCheck.filter(square => board[square] === 'O').length === 1){
-         continue;
-       } else {
-         atRiskSquare = toCheck.filter(square => board[square] === ' ')[0];
-         break;
-       }
+  if(!atRiskSquare){
+    if(board[5] === ' '){
+      atRiskSquare = 5;
     }
   }
 
@@ -114,6 +112,33 @@ function computerChoosesSquare(board){
   }
 }
 
+function checkOpp(mode, board) {
+  let oppSquare = null;
+  let markerToCheck = null;
+
+  if (mode === 'defence') {
+    markerToCheck = HUMAN_MARKER;
+  } else {
+    markerToCheck = COMPUTER_MARKER;
+  }
+
+  for (let line = 0; line < WINNINGLINES.length; line ++){
+    let toCheck = WINNINGLINES[line];
+    if (toCheck.filter(square => board[square] === markerToCheck).length === 2){
+       if (toCheck.filter(square => board[square] === INITIAL_MARKER).length === 1){
+         oppSquare = toCheck.filter(square => board[square] === INITIAL_MARKER)[0];
+         console.log(oppSquare);
+         break;
+       }
+    }
+  }
+
+  return oppSquare;
+}
+
+
+
+
 function boardFull(board) {
   return (emptySquares(board).length === 0);
 }
@@ -123,12 +148,6 @@ function hasWinner(board) {
 }
 
 function detectWinner(board) {
-  // let winningLines = [
-  //   [1, 2, 3], [4, 5, 6], [7, 8, 9], //rows
-  //   [1, 4, 7], [2, 5, 8], [3, 6, 9], //columns
-  //   [1, 5, 9], [3, 5, 7] //diagonals
-  // ];
-
   for (let line = 0; line < WINNINGLINES.length; line++){
     let [sq1, sq2, sq3] = WINNINGLINES[line];
 
@@ -149,13 +168,24 @@ function detectWinner(board) {
   return null;
 }
 
-function playRound(previousResult, scores, board) {
-  while(true){ //Round consisting of moves
-    displayBoard(previousResult, scores, board); //extract this logic?
-    playerChoosesSquare(board);
-    if ( boardFull(board) || hasWinner(board)) break;
-    computerChoosesSquare(board);
-    if ( boardFull(board) || hasWinner(board)) break;
+function playRound(player1, previousResult, scores, board) {
+  if (player1 === 'p'){
+    while(true){ //Round consisting of moves
+      displayBoard(previousResult, scores, board); //extract this logic?
+      playerChoosesSquare(board);
+      if ( boardFull(board) || hasWinner(board)) break;
+      computerChoosesSquare(board);
+      if ( boardFull(board) || hasWinner(board)) break;
+    }
+  } else {
+    while(true){ //Round consisting of moves
+      displayBoard(previousResult, scores, board); //extract this logic?
+      computerChoosesSquare(board);
+      displayBoard(previousResult, scores, board);
+      if ( boardFull(board) || hasWinner(board)) break;
+      playerChoosesSquare(board);
+      if ( boardFull(board) || hasWinner(board)) break;
+    }
   }
 }
 
@@ -186,9 +216,18 @@ while(true) { //Game
     computer: 0
   };
   let previousResult = null;
+  let player1 = null;
+
+  if (FIRST_MOVE === 'choose') {
+    while(true) {
+      prompt('choose who to go first: player or computer');
+      player1 = readline.question().toLowerCase()[0];
+      if (player1 === 'p' || player1 === 'c') break;
+    }
+  }
 
   while(true){ //Set
-    playRound(previousResult, scores, board);
+    playRound(player1, previousResult, scores, board);
     adjustScores(scores, board);
     previousResult = displayRoundWinner(previousResult, board);
     displayBoard(previousResult, scores, board);
