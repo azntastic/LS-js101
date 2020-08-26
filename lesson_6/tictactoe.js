@@ -173,6 +173,7 @@ function alternatePlayer(currentPlayer) {
 }
 
 function playRound(playerOne, scores, board) {
+  console.log(scores);
   let currentPlayer = playerOne;
   displayBoard(scores, board);
 
@@ -261,11 +262,12 @@ while (true) { //Game
     player: 0,
     computer: 0
   };
+
   let previousResult = null;
   let playerOne = checkFirstMove();
 
   while (true) { //Set
-    playRound(playerOne, previousResult, scores, board);
+    playRound(playerOne, scores, board);
     previousResult = setRoundWinner(board);
     adjustScores(scores, board);
     displayBoard(scores, board);
