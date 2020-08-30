@@ -82,60 +82,86 @@ function calculateTotal(cards) {
 
 function bust(cards){
   let total = calculateTotal(cards);
-  console.log(total);
   return (total > 21);
 }
 
 function compareCards(playerCards, dealerCards){
   console.log(`dealer had ${dealerCards}`);
   console.log(`you had ${playerCards}`);
+  console.log(`Dealer total: ${calculateTotal(dealerCards)}, Your total: ${calculateTotal(playerCards)}`);
 }
 
 console.log('welcome to TwentyOne');
 
-let currentDeck = [];
-let dealerCards = [];
-let playerCards = [];
-let status = {
-  player: 'active',
-  dealer: 'active'
-}
-
-initializeDeck(currentDeck);
-shuffleDeck(currentDeck);
-initialDeal(currentDeck, playerCards, dealerCards);
-
-console.log(`Dealer has a ${dealerCards[1]} and an unknown card`);
-console.log(`You have a ${playerCards[0]} and a ${playerCards[1]}`);
-
-//Player turn
 while(true){
-  console.log(`What do you do?`)
-  let answer = readline.question();
-  if (answer === 'stay') break;
-  deal(currentDeck, playerCards);
-  console.log(`Your cards: ${playerCards}`);
-  if (bust(playerCards)) {
-    console.log('you bust');
-    status.player = 'bust';
-    break;
+  let currentDeck = [];
+  let dealerCards = [];
+  let playerCards = [];
+  let status = {
+    player: 'active',
+    dealer: 'active'
   }
-}
 
-//Dealer turn
-if (status.player === 'active'){
+  initializeDeck(currentDeck);
+  shuffleDeck(currentDeck);
+  initialDeal(currentDeck, playerCards, dealerCards);
+
+  console.log(`Dealer has a ${dealerCards[1]} and an unknown card`);
+  console.log(`You have a ${playerCards[0]} and a ${playerCards[1]}`);
+
+  // Player turn
   while(true){
-    if (calculateTotal(dealerCards) >= 17 || bust(dealerCards)) break;
-    deal(currentDeck, dealerCards);
+    console.log(`What do you do?`)
+    let answer = readline.question();
+    if (answer === 'stay') break;
+    deal(currentDeck, playerCards);
+    console.log(`Your cards: ${playerCards}`);
+    if (bust(playerCards)) {
+      console.log('you bust');
+      status.player = 'bust';
+      break;
+    }
   }
 
-  if (bust(dealerCards)) {
-    console.log('dealer bust');
-    status.dealer = 'bust';
+  // Dealer turn
+  if (status.player === 'active'){
+    while(true){
+      if (calculateTotal(dealerCards) >= 17 || bust(dealerCards)) break;
+      deal(currentDeck, dealerCards);
+    }
+
+    if (bust(dealerCards)) {
+      console.log('dealer bust');
+      status.dealer = 'bust';
+    }
   }
+
+  // Check busts
+  if (status.player === 'bust'){
+    compareCards(playerCards, dealerCards);
+    console.log('dealer wins');
+  } else if (status.dealer === 'bust'){
+    compareCards(playerCards, dealerCards);
+    console.log('player wins');
+  }
+
+  // Final calc
+  if (status.player === 'active' && status.dealer ==='active'){
+    let playerTotal = calculateTotal(playerCards);
+    let dealerTotal = calculateTotal(dealerCards);
+
+    if (playerTotal > dealerTotal) {
+      console.log('player wins!');
+    } else {
+      console.log('dealer wins!');
+    }
+  }
+
+  // Play Again
+  console.log('Play Again? y/n')
+  let playAgain = readline.question()
+  if (playAgain === 'n') break;
+  console.clear();
 }
-
-compareCards(playerCards, dealerCards);
-
 
   // playRound(currentDeck);
