@@ -1,4 +1,5 @@
-let cards = {
+const readline = require('readline-sync');
+const CARDS = {
   2: 4,
   3: 4,
   4: 4,
@@ -8,19 +9,15 @@ let cards = {
   8: 4,
   9: 4,
   10: 4,
-  'j': 4,
+  'J': 4,
   'Q': 4,
   'K': 4,
   'A': 4
 };
 
-let currentDeck = [];
-let dealerCards = [];
-let playerCards = [];
-
-function initializeDeck(){
-	Object.keys(cards).forEach(key => {
-  	for (let i = 0; i < cards[key]; i++) {
+function initializeDeck(currentDeck){
+	Object.keys(CARDS).forEach(key => {
+  	for (let i = 0; i < CARDS[key]; i++) {
     	currentDeck.push(key);
     }
   })
@@ -28,7 +25,117 @@ function initializeDeck(){
 
 function shuffleDeck(currentDeck){
 	for (let index = currentDeck.length - 1; index > 0; index--) {
-    let otherIndex = Math.floor(Math.random() * (index + 1)); // 0 to index
-    [currentDeck[index], currentDeck[otherIndex]] = [currentDeck[otherIndex], currentDeck[index]]; // swap elements
+    let otherIndex = Math.floor(Math.random() * (index + 1));
+    [currentDeck[index], currentDeck[otherIndex]] = [currentDeck[otherIndex], currentDeck[index]]; //destructuring
   }
 }
+
+// function playRound(currentDeck){
+//   dealPlayer(currentDeck);
+//   dealDealer(currentDeck)
+// }
+//
+
+function deal(currentDeck, cards){
+  cards.push(currentDeck[currentDeck.length - 1]);
+  currentDeck.pop();
+}
+
+function initialDeal(currentDeck, playerCards, dealerCards){
+  for (let i = 0; i < 2; i++) {
+    deal(currentDeck, playerCards);
+    deal(currentDeck, dealerCards);
+  }
+}
+
+function calculateTotal(cards) {
+  let aces = [];
+  let total = 0;
+
+  for (let i = 0; i < cards.length; i++){
+    if (cards[i] === 'A'){
+      aces.push(cards[i]);
+    } else {
+      switch(cards[i]){
+        case 'J':
+        case 'Q':
+        case 'K':
+          total += 10;
+          break;
+        default:
+          total += Number(cards[i]);
+      }
+    }
+  }
+
+  for (let i = 0; i < aces.length; i++){
+    if (total > 10){
+      total += 1;
+    } else {
+      total += 11;
+    }
+  }
+
+  return total;
+
+}
+
+function bust(cards){
+  let total = calculateTotal(cards);
+  console.log(total);
+  return (total > 21);
+}
+
+function compareCards(playerCards, dealerCards){
+  console.log(`dealer had ${dealerCards}`);
+  console.log(`you had ${playerCards}`);
+}
+
+console.log('welcome to TwentyOne');
+
+let currentDeck = [];
+let dealerCards = [];
+let playerCards = [];
+let status = {
+  player: 'active',
+  dealer: 'active'
+}
+
+initializeDeck(currentDeck);
+shuffleDeck(currentDeck);
+initialDeal(currentDeck, playerCards, dealerCards);
+
+console.log(`Dealer has a ${dealerCards[1]} and an unknown card`);
+console.log(`You have a ${playerCards[0]} and a ${playerCards[1]}`);
+
+//Player turn
+while(true){
+  console.log(`What do you do?`)
+  let answer = readline.question();
+  if (answer === 'stay') break;
+  deal(currentDeck, playerCards);
+  console.log(`Your cards: ${playerCards}`);
+  if (bust(playerCards)) {
+    console.log('you bust');
+    status.player = 'bust';
+    break;
+  }
+}
+
+//Dealer turn
+if (status.player === 'active'){
+  while(true){
+    if (calculateTotal(dealerCards) >= 17 || bust(dealerCards)) break;
+    deal(currentDeck, dealerCards);
+  }
+
+  if (bust(dealerCards)) {
+    console.log('dealer bust');
+    status.dealer = 'bust';
+  }
+}
+
+compareCards(playerCards, dealerCards);
+
+
+  // playRound(currentDeck);
