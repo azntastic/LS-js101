@@ -15,6 +15,10 @@ const CARDS = {
   'A': 4
 };
 
+function prompt(message){
+  console.log(`=> ${message}`);
+}
+
 function initializeDeck(currentDeck){
 	Object.keys(CARDS).forEach(key => {
   	for (let i = 0; i < CARDS[key]; i++) {
@@ -29,12 +33,6 @@ function shuffleDeck(currentDeck){
     [currentDeck[index], currentDeck[otherIndex]] = [currentDeck[otherIndex], currentDeck[index]]; //destructuring
   }
 }
-
-// function playRound(currentDeck){
-//   dealPlayer(currentDeck);
-//   dealDealer(currentDeck)
-// }
-//
 
 function deal(currentDeck, cards){
   cards.push(currentDeck[currentDeck.length - 1]);
@@ -92,20 +90,33 @@ function bust(cards){
 }
 
 function compareCards(playerCards, dealerCards){
-  console.log(`dealer had ${dealerCards}`);
-  console.log(`you had ${playerCards}`);
+  console.log(`Dealer had: ${dealerCards}`);
+  console.log(`You had: ${playerCards}\n`);
   console.log(`Dealer total: ${calculateTotal(dealerCards)}, Your total: ${calculateTotal(playerCards)}`);
 }
 
-function playerTurn(currentDeck, playerCards, status){
+function hitOrStay(){
+  let acceptable = ['hit', 'stay'];
+  let answer;
+
+  while (true){
+    prompt(`hit or stay`);
+    answer = readline.question();
+    if (acceptable.includes(answer)) break;
+    prompt('invalid response.');
+  }
+
+  return answer;
+}
+
+function playerTurn(currentDeck, playerCards, dealerCards, status){
   while(true){
-    console.log(`hit or stay`)
-    let answer = readline.question();
-    if (answer === 'stay') break;
+    if (hitOrStay() === 'stay') break;
     deal(currentDeck, playerCards);
-    console.log(`Your cards: ${playerCards}`); //display cards
+    console.clear();
+    console.log(`Dealer has a ${dealerCards[1]} and an unknown card`);
+    console.log(`Your cards: ${playerCards}`);
     if (bust(playerCards)) {
-      console.log('you bust');
       status.player = 'bust';
       break;
     }
@@ -126,29 +137,38 @@ function dealerTurn(currentDeck, dealerCards, status){
 
 function displayWinner(playerCards, dealerCards, status){
   if (status.player === 'bust'){
-    console.log('dealer wins');
+    prompt('You bust - dealer wins!\n');
   } else if (status.dealer === 'bust'){
-    console.log('player wins');
+    prompt('Dealer bust - you win!\n');
   } else {
     let playerTotal = calculateTotal(playerCards);
     let dealerTotal = calculateTotal(dealerCards);
 
     if (playerTotal > dealerTotal) {
-      console.log('player wins!');
+      prompt('You win!\n');
     } else {
-      console.log('dealer wins!');
+      prompt('Dealer wins!\n');
     }
   }
 }
 
-function playAgain(){
-  console.log('Play Again? y/n')
-  let playAgain = readline.question()
-  if (playAgain === 'y') return true;
+function playAgain() {
+  let answer;
+  let acceptable = ['y', 'n'];
+
+  while (true) {
+    prompt('Play again? (y or n)');
+    answer = readline.question().toLowerCase();
+    if (acceptable.includes(answer)) break;
+    prompt('invalid response.');
+  }
+
+
+  return (answer === 'y');
 }
 
-// Game Logic
-console.log('welcome to TwentyOne');
+console.clear();
+prompt('Welcome to TwentyOne');
 
 while(true){
   let currentDeck = [];
@@ -162,71 +182,16 @@ while(true){
   initializeDeck(currentDeck);
   shuffleDeck(currentDeck);
   initialDeal(currentDeck, playerCards, dealerCards);
-
-  // Game Logic
   logStartingCards(playerCards, dealerCards);
-  playerTurn(currentDeck, playerCards, status);
+  playerTurn(currentDeck, playerCards, dealerCards, status);
   if (status.player !== 'bust'){
     dealerTurn(currentDeck, dealerCards, status);
   }
+  console.clear();
   compareCards(playerCards, dealerCards);
   displayWinner(playerCards, dealerCards, status);
   if (!playAgain()) break;
+  console.clear();
 }
 
-  // // Player turn
-  // while(true){
-  //   console.log(`What do you do?`)
-  //   let answer = readline.question();
-  //   if (answer === 'stay') break;
-  //   deal(currentDeck, playerCards);
-  //   console.log(`Your cards: ${playerCards}`); //display cards
-  //   if (bust(playerCards)) {
-  //     console.log('you bust');
-  //     status.player = 'bust';
-  //     break;
-  //   }
-  // }
-
-  // // Dealer turn
-  // if (status.player === 'active'){
-  //   while(true){
-  //     if (calculateTotal(dealerCards) >= 17 || bust(dealerCards)) break;
-  //     deal(currentDeck, dealerCards);
-  //   }
-  //
-  //   if (bust(dealerCards)) {
-  //     console.log('dealer bust');
-  //     status.dealer = 'bust';
-  //   }
-  // }
-
-  // // Check busts
-  // if (status.player === 'bust'){
-  //   compareCards(playerCards, dealerCards);
-  //   console.log('dealer wins');
-  // } else if (status.dealer === 'bust'){
-  //   compareCards(playerCards, dealerCards);
-  //   console.log('player wins');
-  // }
-  //
-  // // Final calc
-  // if (status.player === 'active' && status.dealer ==='active'){
-  //   let playerTotal = calculateTotal(playerCards);
-  //   let dealerTotal = calculateTotal(dealerCards);
-  //
-  //   if (playerTotal > dealerTotal) {
-  //     console.log('player wins!');
-  //   } else {
-  //     console.log('dealer wins!');
-  //   }
-  // }
-
-  // Play Again
-//   console.log('Play Again? y/n')
-//   let playAgain = readline.question()
-//   if (playAgain === 'n') break;
-//   console.clear();
-// }
-
-  // playRound(currentDeck);
+prompt('Thanks for playing.');
