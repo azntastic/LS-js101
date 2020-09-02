@@ -13,7 +13,7 @@ const CARDS = {
   'Q': 4,
   'K': 4,
   'A': 4
-};
+}; //Object used in case cards used are expanded (2 decks etc...)
 
 function prompt(message){
   console.log(`=> ${message}`);
